@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!--
+  PORTFOLIO PAGE
+  Everything you will normally edit is in this file, between the <main> tags.
+  Sections, in order: Hero, About, Experience, Projects, Education, Contact.
+  Sections with class "reveal" fade in as the visitor scrolls (see styles.css, section 13).
+  Look for the "EDIT" comments. The README.md file has copy-and-paste templates
+  for adding a job, project or school.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- EDIT: page title and search-engine description -->
+  <title>Robert Ryan Ray Jerry Weldy – Network Computing undergraduate</title>
+  <meta name="description" content="Portfolio of Robert Ryan Ray Jerry Weldy, a Network Computing undergraduate at UNIMAS and former airport IT support technician.">
+
+  <!-- Applies the saved (or system) theme before the page paints, to avoid a flash, and switches on
+       the scroll animations when JavaScript is available. Leave as is. -->
+  <script>
+    (function () {
+      var theme;
+      try { theme = localStorage.getItem('theme'); } catch (e) {}
+      if (!theme) theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.classList.add('js');   // enables the scroll animations in styles.css
+    })();
+  </script>
+
+  <link rel="stylesheet" href="styles.css">
+  <script src="main.js" defer></script>
+</head>
+
+<body>
+
+  <!-- ======================= TOP APP BAR ======================= -->
+  <header class="appbar">
+    <!-- EDIT: short name shown top left -->
+    <a class="brand" href="#top">R3</a>
+
+    <!-- Each href must match a section id below. Hidden on narrow phone screens. -->
+    <nav aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <!-- Light / dark switch (logic lives in main.js, icons swap in styles.css) -->
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch to dark theme">
+      <svg class="moon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- ======================= HERO ======================= -->
+    <section class="wrap hero">
+      <div>
+        <!-- EDIT: role line, name and intro -->
+        <p class="title">Network computing undergraduate and former airport IT support</p>
+        <h1>Robert Ryan Ray Jerry Weldy</h1>
+        <p class="lead">I'm studying Network Computing at Universiti Malaysia Sarawak (UNIMAS), after more than two years supporting critical IT systems at Kota Kinabalu International Airport.</p>
+        <div class="actions">
+          <a class="btn btn-filled" href="#experience">See my experience</a>
+          <a class="btn btn-outlined" href="#contact">Get in touch</a>
+        </div>
+      </div>
+
+      <!-- EDIT: to change the photo, replace public/profile.jpg (or change src and alt) -->
+      <div class="hero-shape">
+        <img src="profile.png" alt="Portrait of Robert Ryan Ray Jerry Weldy" width="328" height="400">
+      </div>
+
+      <!-- Bouncing arrow that scrolls to the next section. Delete this line to remove it. -->
+      <a class="scroll-cue" href="#about" aria-label="Scroll to the About section"></a>
+    </section>
+
+    <!-- ======================= ABOUT ======================= -->
+    <section class="wrap about reveal" id="about" aria-labelledby="about-h">
+      <div>
+        <h2 id="about-h">About me</h2>
+        <!-- EDIT: your summary, one <p> per paragraph -->
+        <p>Before my bachelor's degree, I worked as a Technical Assistant at Kota Kinabalu International Airport, supporting systems such as Common Use Passenger Processing Systems (CUPPS) and Baggage Reconciliation Systems (BRS).</p>
+        <p>That work sparked my interest in how interconnected systems are designed, maintained and supported. I'm building on it through my studies at UNIMAS and independent learning, with a focus on network engineering, network operations and data centre infrastructure.</p>
+      </div>
+      <div>
+        <h3 class="list-title">Skills</h3>
+        <!-- EDIT: one <li> per skill. Add, remove or reorder freely. -->
+        <ul class="chips" aria-label="Skills">
+          <li>Technical support</li>
+          <li>Technical maintenance</li>
+          <li>Troubleshooting</li>
+          <li>CUPPS</li>
+          <li>Baggage Reconciliation Systems</li>
+          <li>Network connectivity diagnostics</li>
+          <li>Workstation deployment</li>
+          <li>ESP32 and IoT</li>
+          <li>Embedded systems</li>
+          <li>Sensor integration</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================= EXPERIENCE (timeline) =======================
+         EDIT: newest role first. To add a role, copy a whole <li>...</li>
+         block to the top of the list and change the text.
+         Node colors: class="node" is the main color, class="node alt" the accent. -->
+    <section class="wrap reveal" id="experience" aria-labelledby="exp-h">
+      <h2 id="exp-h">Work experience</h2>
+      <ol class="timeline">
+
+        <li>
+          <span class="node" aria-hidden="true">
+            <!-- briefcase icon -->
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+          </span>
+          <article class="tl-card">
+            <div class="tl-head">
+              <!-- LOGO: initials for now. For an image, replace the next line with: <span class="logo logo-img"><img src="logos/FILE.png" alt="NAME logo"></span>  (delete the line to show no logo) -->
+              <span class="logo logo-img"><img src="logos/Ultiotech.png" alt="NAME logo"></span>
+              <div>
+                <h3>Technical Assistant <span class="meta">June 2024 – September 2026</span></h3>
+                <p class="sub">Ultiotech Sdn. Bhd. at Kota Kinabalu International Airport</p>
+              </div>
+            </div>
+            <ul>
+              <li>Gave Level 1 on-site support for CUPPS, BRS and related airport IT infrastructure.</li>
+              <li>Diagnosed and fixed hardware, software, network connectivity and peripheral problems on workstations, printers and passenger processing equipment.</li>
+              <li>Carried out system maintenance, troubleshooting and workstation deployment.</li>
+              <li>Escalated and resolved incidents with third-level support teams, system vendors and airline representatives.</li>
+            </ul>
+          </article>
+        </li>
+
+        <li>
+          <span class="node alt" aria-hidden="true">
+            <!-- graduation cap icon -->
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg>
+          </span>
+          <article class="tl-card">
+            <div class="tl-head">
+              <!-- LOGO: initials for now. For an image, replace the next line with: <span class="logo logo-img"><img src="logos/FILE.png" alt="NAME logo"></span>  (delete the line to show no logo) -->
+              <span class="logo logo-img"><img src="logos/LOGO_baru_Poli_msia_KKinabalu.png" alt="NAME logo"></span>
+              <div>
+                <h3>Student <span class="meta">September 2021 – September 2024</span></h3>
+                <p class="sub">Politeknik Kota Kinabalu, Sabah</p>
+              </div>
+            </div>
+            <p>Built an ESP32-based IoT smart hydroponic system as my final year project.</p>
+          </article>
+        </li>
+
+      </ol>
+    </section>
+
+
+    <!-- ======================= EDUCATION (dropdowns) =======================
+         EDIT: newest first. To add one, copy a whole <details> block.
+         Add the word "open" to a <details> tag to have it start expanded.
+         All blocks share name="education", so opening one closes the others. -->
+    <section class="wrap reveal" id="education" aria-labelledby="edu-h">
+      <h2 id="edu-h">Education</h2>
+
+      <div class="accordion">
+
+        <details class="acc" name="education" open>
+          <summary>
+            <!-- LOGO: initials for now. For an image, replace the next line with: <span class="logo logo-img"><img src="logos/FILE.png" alt="NAME logo"></span>  (delete the line to show no logo) -->
+            <span class="logo logo-img"><img src="logos/UNIMAS-logo.png" alt="NAME logo"></span>
+            <h3>Universiti Malaysia Sarawak (UNIMAS)</h3>
+            <span class="meta">September 2026 – June 2030</span>
+            <span class="chev" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <p>Sarjana Muda Sains Komputer (Pengkomputeran Rangkaian)</p>
+            <p>Computer Systems Networking and Telecommunications</p>
+          </div>
+        </details>
+
+        <details class="acc" name="education">
+          <summary>
+            <!-- LOGO: initials for now. For an image, replace the next line with: <span class="logo logo-img"><img src="logos/FILE.png" alt="NAME logo"></span>  (delete the line to show no logo) -->
+            <span class="logo logo-img"><img src="logos/LOGO_baru_Poli_msia_KKinabalu.png" alt="NAME logo"></span>
+            <h3>Politeknik Kota Kinabalu, Sabah</h3>
+            <span class="meta">September 2021 – September 2024</span>
+            <span class="chev" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <p>Diploma, Electronic Engineering (Computer)</p>
+            <p>Final year project: <a href="#projects">IoT-based smart hydroponic system</a></p>
+          </div>
+        </details>
+
+        <details class="acc" name="education">
+          <summary>
+            <!-- LOGO: initials for now. For an image, replace the next line with: <span class="logo logo-img"><img src="logos/FILE.png" alt="NAME logo"></span>  (delete the line to show no logo) -->
+            <span class="logo logo-img"><img src="logos/Lencana_Sekolah_Menengah_Kebangsaan_Tamparuli.jpg" alt="NAME logo"></span>
+            <h3>Sekolah Menengah Kebangsaan Tamparuli, Sabah</h3>
+            <span class="meta">January 2016 – December 2020</span>
+            <span class="chev" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <p>Sijil Pelajaran Malaysia, Science Stream</p>
+          </div>
+        </details>
+
+      </div>
+
+      <!-- EDIT: awards, one <li> each -->
+      <h3 class="list-title award-title">Honors and awards</h3>
+      <ul class="chips" aria-label="Honors and awards">
+        <li>Pingat Ketua Jabatan</li>
+      </ul>
+    </section>
+
+    <!-- ======================= PROJECTS =======================
+         EDIT: one <article class="card project"> per project. Copy the whole
+         block to add another; the cards stack automatically. -->
+    <section class="wrap reveal" id="projects" aria-labelledby="proj-h">
+      <h2 id="proj-h">Projects</h2>
+
+      <article class="card project">
+        <div class="thumb">
+          <!-- sprout icon; swap for another inline SVG or an <img> -->
+          <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22V12"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 16c0-3-2-5.5-6-5.5 0 4 2 5.5 6 5.5z"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>IoT-based smart hydroponic system</h3>
+          <p class="sub">Final year project, Politeknik Kota Kinabalu</p>
+          <p>An ESP32-based system that monitors the pH and volume of the nutrient solution and the ambient temperature. A water pump runs automatically from preset parameters. Through the Blynk platform, users can check sensor readings and switch the pump on or off remotely.</p>
+          <ul class="chips" aria-label="Project skills">
+            <li>ESP32</li>
+            <li>Sensor integration</li>
+            <li>Automation</li>
+            <li>IoT with Blynk</li>
+            <li>Hardware-software integration</li>
+          </ul>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ======================= CONTACT =======================
+         EDIT: email address (appears twice: the link target and the visible text)
+         and your LinkedIn address. -->
+    <section class="wrap contact reveal" id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Contact</h2>
+      <p>If you'd like to connect or have a question, email me at <a href="mailto:robertjerry982@gmail.com">robertjerry982@gmail.com</a> or find me on <a href="https://www.linkedin.com/in/robert-ryan-ray-j-2a552918b" target="_blank" rel="noopener">LinkedIn</a>. I'd be glad to hear from you.</p>
+    </section>
+
+  </main>
+
+  <!-- The year updates itself (main.js). EDIT: the name only. -->
+  <footer class="wrap footer">© <span id="year">2026</span> Robert Ryan Ray Jerry Weldy</footer>
+
+</body>
+</html>

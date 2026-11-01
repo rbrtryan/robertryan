@@ -1,0 +1,871 @@
+/* ==========================================================================
+   styles.css: all styling for the portfolio (Material Design 3 inspired)
+
+   CONTENTS
+     1. Color themes        <- change colors here
+     2. Fonts, shapes, motion
+     3. Base and layout
+     4. Top app bar and theme toggle
+     5. Typography
+     6. Buttons
+     7. Hero
+     8. About and chips
+     9. Experience timeline
+    10. Projects
+    11. Education dropdowns
+    12. Contact and footer
+    13. Scroll animations
+    14. Page-load animation
+
+   No external files are loaded. Colors are defined once in section 1 and used
+   everywhere through var(--md-sys-color-...), so changing a color there
+   changes the whole site.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. COLOR THEMES
+   Role names follow Material Design 3. How they are used here:
+     primary     main buttons, timeline dot, strongest color
+     tertiary    ACCENT: links, dates, role line, focus outlines, photo ring
+     surface     page background
+     on-surface  main text
+     *-container soft tinted backgrounds (cards, dropdowns, project image)
+     outline     borders and dividers
+   ========================================================================== */
+
+/* Light theme: black and white with an electric blue accent */
+:root {
+  color-scheme: light;
+
+  --md-sys-color-primary: #111111;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #EDEDED;
+  --md-sys-color-on-primary-container: #111111;
+
+  --md-sys-color-secondary: #444444;
+  --md-sys-color-secondary-container: #E4E4E4;
+  --md-sys-color-on-secondary-container: #111111;
+
+  --md-sys-color-tertiary: #2457F5;               /* accent */
+  --md-sys-color-on-tertiary: #FFFFFF;
+  --md-sys-color-tertiary-container: #DCE5FF;
+  --md-sys-color-on-tertiary-container: #001A5C;
+
+  --md-sys-color-surface: #FFFFFF;
+  --md-sys-color-on-surface: #111111;
+  --md-sys-color-on-surface-variant: #444444;     /* softer text */
+  --md-sys-color-surface-container-low: #F5F5F5;
+  --md-sys-color-surface-container: #EFEFEF;
+  --md-sys-color-surface-container-high: #E8E8E8;
+
+  --md-sys-color-outline: #777777;
+  --md-sys-color-outline-variant: #CFCFCF;
+}
+
+/* Dark theme: dark blue and white with an amber accent.
+   Applied when <html data-theme="dark"> (set by main.js). */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --md-sys-color-primary: #FFFFFF;
+  --md-sys-color-on-primary: #0B1530;
+  --md-sys-color-primary-container: #1B2B5A;
+  --md-sys-color-on-primary-container: #DCE5FF;
+
+  --md-sys-color-secondary: #B8C4E6;
+  --md-sys-color-secondary-container: #22335F;
+  --md-sys-color-on-secondary-container: #E1E8FF;
+
+  --md-sys-color-tertiary: #FFC857;               /* accent */
+  --md-sys-color-on-tertiary: #3A2A00;
+  --md-sys-color-tertiary-container: #4A3600;
+  --md-sys-color-on-tertiary-container: #FFE3A3;
+
+  --md-sys-color-surface: #0B1530;
+  --md-sys-color-on-surface: #F2F5FF;
+  --md-sys-color-on-surface-variant: #B8C2DD;
+  --md-sys-color-surface-container-low: #101C3F;
+  --md-sys-color-surface-container: #14224A;
+  --md-sys-color-surface-container-high: #1B2B5A;
+
+  --md-sys-color-outline: #7886AE;
+  --md-sys-color-outline-variant: #2C3C6B;
+}
+
+
+/* ==========================================================================
+   2. FONTS, SHAPES, MOTION
+   ========================================================================== */
+:root {
+  /* Roboto if installed on the visitor's device, otherwise their system font.
+     (No font files are downloaded. See README.md to bundle Roboto yourself.) */
+  --font: Roboto, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  --shape-md: 16px;                          /* small cards, chips, dropdowns */
+  --shape-lg: 28px;                          /* project card, large panels */
+  --ease: cubic-bezier(0.2, 0, 0, 1);        /* Material "emphasized" easing */
+  --logo-size: 48px;                         /* size of school / employer logos */
+}
+
+
+/* ==========================================================================
+   3. BASE AND LAYOUT
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;                  /* keeps section titles clear of the sticky bar */
+}
+
+/* Respect visitors who turn animations off in their system settings */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .chev::before { transition: none; }
+}
+
+body {
+  margin: 0;
+  font: 400 1rem/1.5 var(--font);
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
+
+a {
+  color: var(--md-sys-color-tertiary);
+}
+
+a:focus-visible {
+  outline: 3px solid var(--md-sys-color-tertiary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
+
+p {
+  max-width: 60ch;                           /* comfortable line length */
+}
+
+/* .wrap centers content and limits its width. Sections use it for padding. */
+.wrap {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 32px);
+}
+
+section.wrap {
+  padding-block: clamp(40px, 7vw, 88px);
+}
+
+
+/* ==========================================================================
+   4. TOP APP BAR AND THEME TOGGLE
+   ========================================================================== */
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 64px;
+  padding-inline: clamp(16px, 4vw, 32px);
+  background: var(--md-sys-color-surface-container);
+}
+
+.brand {
+  margin-right: auto;                        /* pushes nav and toggle to the right */
+  font: 500 1.375rem/1.75rem var(--font);
+  color: var(--md-sys-color-on-surface);
+  text-decoration: none;
+}
+
+.appbar nav {
+  display: flex;
+  gap: 4px;
+}
+
+.appbar nav a {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font: 500 0.875rem/1.25rem var(--font);
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  transition: background-color 200ms var(--ease);
+}
+
+.appbar nav a:hover {
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+/* Navigation links are hidden on narrow screens (phones) */
+@media (max-width: 760px) {
+  .appbar nav { display: none; }
+}
+
+/* Round icon button used for the theme toggle */
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  transition: background-color 200ms var(--ease);
+}
+
+.icon-btn:hover  { background: color-mix(in srgb, var(--md-sys-color-on-surface-variant)  8%, transparent); }
+.icon-btn:active { background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 12%, transparent); }
+.icon-btn:focus-visible { outline: 3px solid var(--md-sys-color-tertiary); }
+
+/* Both icons share one grid cell. Only the one for the OTHER theme shows. */
+.icon-btn svg { grid-area: 1 / 1; }
+.icon-btn .sun { display: none; }
+:root[data-theme="dark"] .icon-btn .sun  { display: block; }
+:root[data-theme="dark"] .icon-btn .moon { display: none; }
+
+
+/* ==========================================================================
+   5. TYPOGRAPHY
+   ========================================================================== */
+h1 {
+  margin-block: 12px 24px;
+  font: 500 clamp(2.5rem, 7vw, 4.75rem)/1.05 var(--font);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  margin-bottom: 24px;
+  font: 400 clamp(2rem, 4vw, 2.5rem)/1.2 var(--font);
+}
+
+h3 {
+  font: 500 1.25rem/1.75rem var(--font);
+}
+
+.title {                                     /* role line above the name */
+  font: 500 1.125rem/1.5rem var(--font);
+  color: var(--md-sys-color-tertiary);
+}
+
+.lead {                                      /* intro paragraph under the name */
+  max-width: 52ch;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.sub {                                       /* secondary line, e.g. company name */
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.meta {                                      /* dates */
+  font: 500 0.875rem/1.5rem var(--font);
+  color: var(--md-sys-color-tertiary);
+}
+
+.list-title {                                /* small heading above a chip list */
+  margin-bottom: 12px;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.award-title {
+  margin-top: 32px;
+}
+
+
+/* ==========================================================================
+   6. BUTTONS
+   Use on <a> or <button>:  class="btn btn-filled"  or  class="btn btn-outlined"
+   ========================================================================== */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  font: 500 0.875rem/1.25rem var(--font);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Hover / press highlight ("state layer") */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 200ms var(--ease);
+}
+
+.btn:hover::after  { opacity: 0.08; }
+.btn:active::after { opacity: 0.12; }
+.btn:focus-visible { outline: 3px solid var(--md-sys-color-tertiary); outline-offset: 2px; }
+
+.btn-filled {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.btn-outlined {
+  border-color: var(--md-sys-color-outline);
+  color: var(--md-sys-color-primary);
+}
+
+
+/* ==========================================================================
+   7. HERO
+   ========================================================================== */
+/* The hero fills the first screen (the 64px app bar is subtracted).
+   100svh = visible screen height on phones; 100vh is the fallback. */
+.wrap.hero {
+  position: relative;
+  display: grid;
+  gap: 40px;
+  align-items: center;
+  align-content: center;
+  min-height: calc(100vh - 64px);
+  min-height: calc(100svh - 64px);
+  padding-block: clamp(24px, 6vh, 72px) clamp(64px, 11vh, 96px);   /* extra room at the bottom for the arrow */
+}
+
+@media (min-width: 760px) {
+  .hero { grid-template-columns: 1.4fr 1fr; }   /* text left, photo right */
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+/* Bouncing arrow at the bottom of the hero */
+.scroll-cue {
+  position: absolute;
+  bottom: clamp(12px, 3vh, 24px);
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-left: -24px;                        /* centers it without using transform (the bounce uses transform) */
+  border-radius: 50%;
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  animation: cue-bounce 2s var(--ease) infinite;
+}
+
+.scroll-cue::before {                        /* the arrow itself */
+  content: "";
+  width: 10px;
+  height: 10px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-2px, -2px);
+}
+
+.scroll-cue:hover {
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+.scroll-cue:focus-visible {
+  outline: 3px solid var(--md-sys-color-tertiary);
+}
+
+@keyframes cue-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(8px); }
+}
+
+/* Photo in an organic rounded shape.
+   To change the shape, edit border-radius. To change the ring, edit box-shadow. */
+.hero-shape {
+  width: min(100%, 360px, 48svh);            /* shrinks on short screens */
+  aspect-ratio: 1;
+  justify-self: center;
+  overflow: hidden;
+  background: #FFFFFF;                       /* matches the photo's white backdrop */
+  border-radius: 62% 38% 54% 46% / 48% 56% 44% 52%;
+  box-shadow: 0 0 0 4px var(--md-sys-color-tertiary);
+}
+
+.hero-shape img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 18%;                  /* keeps the face near the top of the crop */
+  transform: scale(1.08);                    /* crops thin edge lines. Raise if they return. */
+}
+
+
+/* ==========================================================================
+   8. ABOUT AND CHIPS
+   ========================================================================== */
+.about {
+  display: grid;
+  gap: 32px;
+}
+
+@media (min-width: 760px) {
+  .about { grid-template-columns: 1.2fr 1fr; }  /* text left, skills right */
+}
+
+.about p + p {
+  margin-top: 16px;
+}
+
+/* Chips: <ul class="chips"> with one <li> per item (skills, awards, tags) */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 6px 16px;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--shape-md);
+  font: 500 0.875rem/1.25rem var(--font);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+
+/* ==========================================================================
+   9. EXPERIENCE TIMELINE
+   A vertical line (::before) with an end ring (::after). Each <li> has a round
+   icon "node" on the line and a card on the right.
+   ========================================================================== */
+.timeline {
+  position: relative;
+  margin: 0;
+  padding: 0 0 48px;                         /* space for the end ring */
+  list-style: none;
+}
+
+.timeline::before {                          /* the vertical line */
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 12px;
+  left: 22px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--md-sys-color-outline-variant);
+}
+
+.timeline::after {                           /* the ring at the bottom */
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 12px;
+  width: 24px;
+  height: 24px;
+  border: 4px solid var(--md-sys-color-outline-variant);
+  border-radius: 50%;
+  background: var(--md-sys-color-surface);
+}
+
+.timeline li {
+  position: relative;
+  margin-bottom: 16px;
+  padding-left: 72px;                        /* room for the node */
+}
+
+.node {                                      /* round icon on the line */
+  position: absolute;
+  top: 8px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--md-sys-color-surface);   /* gap between node and line */
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.node.alt {                                  /* accent-colored node */
+  background: var(--md-sys-color-tertiary);
+  color: var(--md-sys-color-on-tertiary);
+}
+
+.tl-card {
+  padding: 20px 24px;
+  border-radius: var(--shape-md);
+  background: var(--md-sys-color-surface-container-low);
+}
+
+.tl-head {                                   /* logo | title, date and organisation */
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.tl-head + p,
+.tl-head + ul {
+  margin-top: 12px;
+}
+
+.tl-card h3 {                                /* job title with the date beside it */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 12px;
+}
+
+.tl-card ul {                                /* bullet points */
+  display: grid;
+  gap: 8px;
+  max-width: 70ch;
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
+.tl-card p + p,
+.tl-card .sub + p {
+  margin-top: 8px;
+}
+
+
+/* ==========================================================================
+   10. PROJECTS
+   Image/icon panel on the left (top on phones), text on the right.
+   ========================================================================== */
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--shape-lg);
+  background: var(--md-sys-color-surface);
+}
+
+.card + .card {
+  margin-top: 16px;                          /* space between several project cards */
+}
+
+.thumb {
+  display: grid;
+  place-items: center;
+  height: 168px;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 20px 24px 24px;
+}
+
+.card-body .chips {
+  margin-top: 8px;
+}
+
+@media (min-width: 760px) {
+  .project { flex-direction: row; }
+  .project .thumb {
+    flex-shrink: 0;
+    width: 260px;
+    height: auto;
+  }
+}
+
+
+/* ==========================================================================
+   LOGOS (schools and employers)
+   Default is a tile with initials. Add class "logo-img" and put an <img> inside
+   to show a real logo on a white tile. Size is set by --logo-size in section 2.
+   ========================================================================== */
+.logo {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  border-radius: 12px;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  font: 500 0.875rem/1 var(--font);
+  letter-spacing: 0.02em;
+}
+
+.logo-img {
+  padding: 6px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: #FFFFFF;                       /* keeps dark logos visible in dark theme */
+}
+
+.logo-img img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+
+/* ==========================================================================
+   11. EDUCATION DROPDOWNS
+   Built on the browser's own <details>/<summary>, so no JavaScript is needed.
+   The arrow (.chev) is drawn with CSS and flips when the item is open.
+   ========================================================================== */
+.accordion {
+  display: grid;
+  gap: 8px;
+  max-width: 860px;
+}
+
+.acc {
+  overflow: hidden;
+  border-radius: var(--shape-md);
+  background: var(--md-sys-color-surface-container-low);
+  transition: background-color 200ms var(--ease);
+}
+
+.acc[open] {
+  background: var(--md-sys-color-surface-container);
+}
+
+.acc summary {                               /* the clickable row: logo | title + date | arrow */
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "logo title chev"
+    "logo meta  chev";
+  align-items: center;
+  row-gap: 2px;
+  min-height: 64px;
+  padding: 12px 16px 12px 20px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.acc summary::-webkit-details-marker {       /* hide Safari's default triangle */
+  display: none;
+}
+
+.acc summary::after {                        /* hover highlight */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--md-sys-color-on-surface);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms var(--ease);
+}
+
+.acc summary:hover::after {
+  opacity: 0.06;
+}
+
+.acc summary:focus-visible {
+  outline: 3px solid var(--md-sys-color-tertiary);
+  outline-offset: -3px;
+  border-radius: var(--shape-md);
+}
+
+.acc summary .logo {
+  grid-area: logo;
+  margin-right: 16px;
+}
+
+.acc summary h3 {
+  grid-area: title;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.acc summary .meta {
+  grid-area: meta;
+}
+
+.chev {                                      /* the arrow */
+  grid-area: chev;
+  position: relative;
+  margin-left: 16px;
+  width: 24px;
+  height: 24px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.chev::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 7px;
+  width: 9px;
+  height: 9px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);                  /* points down */
+  transition: transform 200ms var(--ease);
+}
+
+.acc[open] .chev::before {
+  transform: translateY(5px) rotate(-135deg);  /* points up */
+}
+
+.acc-body {
+  padding: 0 24px 20px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.acc-body p + p {
+  margin-top: 4px;
+}
+
+
+/* ==========================================================================
+   12. CONTACT AND FOOTER
+   ========================================================================== */
+.contact p {
+  max-width: 62ch;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.footer {
+  padding-block: 32px;
+  font-size: 0.875rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+
+/* ==========================================================================
+   13. SCROLL ANIMATIONS
+   Add class "reveal" to a <section> and it fades up when scrolled into view
+   (main.js adds "is-visible"). Timeline items, education dropdowns and project
+   cards inside it then appear one after another.
+
+   Everything is hidden ONLY when JavaScript is running (the "js" class on
+   <html>, set in index.html), so visitors without JavaScript still see the
+   whole page. To remove the animation from a section, delete "reveal" from its
+   <section> tag. To slow it down or speed it up, change the 700ms / 600ms.
+   ========================================================================== */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Items inside a revealed section: start lower and invisible... */
+.js .reveal :is(.timeline > li, .accordion > .acc, .card) {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms var(--ease), transform 600ms var(--ease), background-color 200ms var(--ease);
+}
+
+/* ...then slide into place, each a little after the previous one */
+.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 200ms;
+}
+
+.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(2) { transition-delay: 320ms; }
+.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(3) { transition-delay: 440ms; }
+.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(n+4) { transition-delay: 560ms; }
+
+/* Visitors who prefer less motion: a plain, quick fade with no movement */
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal,
+  .js .reveal :is(.timeline > li, .accordion > .acc, .card) {
+    transform: none;
+    transition: opacity 400ms ease;
+  }
+
+  .js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card) {
+    transition-delay: 0ms !important;
+  }
+}
+
+
+/* ==========================================================================
+   14. PAGE-LOAD ANIMATION
+   Plays every time the page loads or is reloaded: the top bar fades in, then
+   the hero text, buttons, photo and arrow appear one after another.
+
+   It uses plain CSS animations, so it needs no JavaScript. "both" keeps each
+   item hidden until its turn, then leaves it visible. To change the timing,
+   edit the delay (the last time value) on each line; to remove an item's
+   animation, delete its line.
+   ========================================================================== */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: none; }
+}
+
+.appbar        { animation: fade-in 600ms var(--ease)  0ms both; }
+
+.hero .title   { animation: fade-up 800ms var(--ease) 150ms both; }
+.hero h1       { animation: fade-up 800ms var(--ease) 300ms both; }
+.hero .lead    { animation: fade-up 800ms var(--ease) 450ms both; }
+.hero .actions { animation: fade-up 800ms var(--ease) 600ms both; }
+.hero-shape    { animation: pop-in 900ms var(--ease) 350ms both; }
+
+/* The arrow fades in last, then keeps bouncing (see section 7) */
+.scroll-cue {
+  animation: fade-in 600ms var(--ease) 1100ms both,
+             cue-bounce 2s var(--ease) 1700ms infinite;
+}
+
+/* Visitors who prefer less motion (a device setting, often turned on by
+   "reduce animations" or battery saver): a plain, quick fade with no movement
+   and no bouncing arrow. If you never see the animation, check that setting. */
+@media (prefers-reduced-motion: reduce) {
+  .appbar,
+  .hero .title,
+  .hero h1,
+  .hero .lead,
+  .hero .actions,
+  .hero-shape,
+  .scroll-cue { animation: fade-in 500ms ease 0ms both; }
+}
