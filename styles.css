@@ -628,9 +628,9 @@ h3 {
 
 .logo-img img {
   display: block;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: calc(var(--logo-size) - 14px);      /* tile size minus 6px padding and 1px border on each side */
+  height: calc(var(--logo-size) - 14px);
+  object-fit: contain;                       /* keeps the emblem's proportions, never stretched */
 }
 
 
