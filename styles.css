@@ -14,7 +14,7 @@
     10. Projects
     11. Education dropdowns
     12. Contact and footer
-    13. Scroll animations
+    13. Full-screen sections and scroll fade
     14. Page-load animation
 
    No external files are loaded. Colors are defined once in section 1 and used
@@ -106,6 +106,7 @@
   --shape-lg: 28px;                          /* project card, large panels */
   --ease: cubic-bezier(0.2, 0, 0, 1);        /* Material "emphasized" easing */
   --logo-size: 48px;                         /* size of school / employer logos */
+  --bar: 64px;                               /* height of the top app bar */
 }
 
 
@@ -120,7 +121,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;                  /* keeps section titles clear of the sticky bar */
+  scroll-padding-top: var(--bar);            /* sections stop just below the sticky bar */
 }
 
 /* Respect visitors who turn animations off in their system settings */
@@ -163,7 +164,7 @@ p {
 }
 
 section.wrap {
-  padding-block: clamp(40px, 7vw, 88px);
+  padding-block: clamp(24px, 6vh, 72px);
 }
 
 
@@ -177,7 +178,7 @@ section.wrap {
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 64px;
+  height: var(--bar);
   padding-inline: clamp(16px, 4vw, 32px);
   background: var(--md-sys-color-surface-container);
 }
@@ -338,16 +339,14 @@ h3 {
 /* ==========================================================================
    7. HERO
    ========================================================================== */
-/* The hero fills the first screen (the 64px app bar is subtracted).
-   100svh = visible screen height on phones; 100vh is the fallback. */
+/* The hero fills the first screen (see section 13 for the sizing). */
 .wrap.hero {
   position: relative;
   display: grid;
   gap: 40px;
   align-items: center;
   align-content: center;
-  min-height: calc(100vh - 64px);
-  min-height: calc(100svh - 64px);
+  /* (sizing now comes from the full-screen rule in section 13) */
   padding-block: clamp(24px, 6vh, 72px) clamp(64px, 11vh, 96px);   /* extra room at the bottom for the arrow */
 }
 
@@ -765,55 +764,94 @@ h3 {
 
 
 /* ==========================================================================
-   13. SCROLL ANIMATIONS
-   Add class "reveal" to a <section> and it fades up when scrolled into view
-   (main.js adds "is-visible"). Timeline items, education dropdowns and project
-   cards inside it then appear one after another.
+   13. FULL-SCREEN SECTIONS AND SCROLL FADE
+   Every <section class="wrap ..."> fills the screen below the app bar, with its
+   content centered. As you scroll, the section you leave fades out and the next
+   one fades in (main.js switches the class "is-visible" on and off).
 
-   Everything is hidden ONLY when JavaScript is running (the "js" class on
-   <html>, set in index.html), so visitors without JavaScript still see the
-   whole page. To remove the animation from a section, delete "reveal" from its
-   <section> tag. To slow it down or speed it up, change the 700ms / 600ms.
+   - Everything is hidden ONLY when JavaScript is running (the "js" class on
+     <html>, set in index.html), so visitors without JavaScript see the page.
+   - To take a section out of the fade, delete "reveal" from its <section> tag.
+   - Speed: change the 250ms / 500ms values below. Snapping: see the snap rules.
    ========================================================================== */
+
+/* -- Full-screen panels -- */
+/* :where() gives these rules zero weight, so each section's own layout
+   (e.g. the two columns in About) can still override them. */
+:where(section.wrap) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;                     /* centers the content vertically */
+  min-height: calc(100vh - var(--bar));      /* fallback for older browsers */
+  min-height: calc(100svh - var(--bar));     /* svh = visible height on phones */
+}
+
+/* -- Snapping: scrolling settles neatly on a section -- */
+html {
+  scroll-snap-type: y proximity;             /* gentle snap, always free to scroll */
+}
+
+section.wrap {
+  scroll-snap-align: start;
+}
+
+.footer {
+  scroll-snap-align: end;                    /* lets you reach the very bottom */
+}
+
+/* On roomy screens, one scroll gesture moves exactly one section */
+@media (min-width: 900px) and (min-height: 720px) {
+  html { scroll-snap-type: y mandatory; }
+  section.wrap { scroll-snap-stop: always; }
+}
+
+/* -- Fade out / fade in --
+   Sections change ONLY their opacity. They must never move (no transform,
+   margin or size changes): scroll snapping aims at each section's position, and
+   if a section shifts while the page is settling, the browser re-snaps and the
+   scroll visibly stutters. Items INSIDE a section may still slide, because they
+   do not change the section's position.
+   Leaving is quick (250ms); arriving waits a moment, then fades in (500ms). */
 .js .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+  transition: opacity 250ms ease-out;
+  will-change: opacity;                      /* lets the browser animate it smoothly on the GPU */
 }
 
 .js .reveal.is-visible {
   opacity: 1;
-  transform: none;
+  transition: opacity 500ms var(--ease) 120ms;
 }
 
-/* Items inside a revealed section: start lower and invisible... */
+/* Items inside a section: start slightly lower and invisible... */
 .js .reveal :is(.timeline > li, .accordion > .acc, .card) {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 600ms var(--ease), transform 600ms var(--ease), background-color 200ms var(--ease);
+  transition: opacity 250ms ease-out, transform 250ms ease-out, background-color 200ms var(--ease);
 }
 
-/* ...then slide into place, each a little after the previous one */
+/* ...then slide into place, each a little after the previous one
+   (--d is the delay; the last value keeps hover color changes instant) */
 .js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card) {
   opacity: 1;
   transform: none;
-  transition-delay: 200ms;
+  transition-duration: 500ms, 500ms, 200ms;
+  transition-timing-function: var(--ease), var(--ease), var(--ease);
+  transition-delay: var(--d, 250ms), var(--d, 250ms), 0ms;
 }
 
-.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(2) { transition-delay: 320ms; }
-.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(3) { transition-delay: 440ms; }
-.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(n+4) { transition-delay: 560ms; }
+.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(2)   { --d: 370ms; }
+.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(3)   { --d: 490ms; }
+.js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card):nth-child(n+4) { --d: 610ms; }
 
 /* Visitors who prefer less motion: a plain, quick fade with no movement */
 @media (prefers-reduced-motion: reduce) {
   .js .reveal,
-  .js .reveal :is(.timeline > li, .accordion > .acc, .card) {
-    transform: none;
-    transition: opacity 400ms ease;
-  }
-
+  .js .reveal.is-visible,
+  .js .reveal :is(.timeline > li, .accordion > .acc, .card),
   .js .reveal.is-visible :is(.timeline > li, .accordion > .acc, .card) {
-    transition-delay: 0ms !important;
+    transform: none;
+    transition: opacity 400ms ease 0ms;
   }
 }
 
