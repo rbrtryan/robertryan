@@ -492,7 +492,7 @@ h3 {
   background: var(--md-sys-color-surface);
 }
 
-.timeline li {
+.timeline > li {
   position: relative;
   margin-bottom: 16px;
   padding-left: 72px;                        /* room for the node */
