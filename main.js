@@ -5,7 +5,7 @@
 
    1. Theme toggle (light / dark)
    2. Footer year
-   3. Fade-in of sections as the visitor scrolls
+   3. Fade sections in and out as the visitor scrolls
 
    The first theme choice (saved or system preference) is applied by the small
    inline script in the <head> of index.html, so the page never flashes the
@@ -37,9 +37,11 @@
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  /* ---- 3. Reveal sections on scroll --------------------------------------
-     Any element with class "reveal" gets class "is-visible" the first time it
-     scrolls into view. The animation itself is in styles.css (section 13). */
+  /* ---- 3. Fade sections in and out as you scroll ------------------------
+     Any element with class "reveal" gets class "is-visible" while it crosses
+     the middle of the screen, and loses it when it moves away. So the section
+     you scroll past fades out and the next one fades in. The animation itself
+     is in styles.css (section 13). */
   var items = document.querySelectorAll('.reveal');
 
   if (!('IntersectionObserver' in window)) {
@@ -48,11 +50,9 @@
   } else {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);        // animate once only
+        entry.target.classList.toggle('is-visible', entry.isIntersecting);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    }, { rootMargin: '-45% 0px -45% 0px' });   // watches a thin band across the middle of the screen
 
     items.forEach(function (el) { observer.observe(el); });
   }
